@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Automatic Dimension Reduction</h1>
+    <form action="/start-experiment" method="post" class="row mb-3">
+        <div class="col-6">
+            <!-- Experiment container -->
+            <div class="col border border-black p-4 mb-4">
+                <h3> Experiment </h3>
+                <hr>
+                <div class="mb-4">
+                    <label class="form-label" for="name"> Name </label>
+                    <input class="form-control" type="text" id="name" name="name">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="file"> File </label>
+                    <input class="form-control" type="file" id="file" name="file" accept=".csv">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="labelColumn"> Label Column Name</label>
+                    <input class="form-control" type="text" id="labelColumn" name="label_column">
+                </div>
+                <hr>
+                <h4> Classifier </h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item border border-0">
+                      <input class="form-check-input me-1" type="radio" name="classifier" value="NaiveBayes" id="naiveBayes" checked>
+                      <label class="form-check-label" for="svm"> Naive Bayes </label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                      <input class="form-check-input me-1" type="radio" name="classifier" value="RandomForest" id="randomForest">
+                      <label class="form-check-label" for="randomForest"> Random Forest </label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                      <input class="form-check-input me-1" type="radio" name="classifier" value="SVM" id="svm">
+                      <label class="form-check-label" for="naiveBayes"> SVM</label>
+                    </li>
+                  </ul>
+            </div>
+            <!-- Stopping container -->
+            <div class="col border border-black p-4 mb-4">
+                <h3> Stopping Criteria </h3>
+                <hr>
+                <h4> Metric </h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="radio" id="accuracy" name="metric" value="accuracy" checked>
+                        <label class="form-check-label" for="accuracy">Accuracy</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="radio" id="f1Macro" name="metric" value="f1_macro">
+                        <label class="form-check-label" for="f1Macro">F1 Macro</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="radio" id="mcc" name="metric" value="matthews_corrcoef">
+                        <label class="form-check-label" for="mcc">MCC</label>
+                    </li>
+                </ul>
+
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h4> Target </h4>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="target" name="target">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h4> Patience  </h4>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control" type="text" id="numExections" name="numExections">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <h4> Optimization tries </h4>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control" type="text" id="optTries" name="optTries">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <!-- Methods container -->
+            <div class="col border border-black p-4 mb-4">
+                <h3> Methods </h3>
+                <hr>
+                <h4> Filter </h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="anova" name="anova" value="True">
+                        <label class="form-check-label" for="anova">ANOVA</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="chiSquare" name="chiSquare" value="True">
+                        <label class="form-check-label" for="chiSquare">Chi-Square</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="mRmr" name="mRmr" value="True">
+                        <label class="form-check-label" for="mRmr">mRMR</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="infoGain" name="infoGain" value="True">
+                        <label class="form-check-label" for="infoGain">Info-Gain</label>
+                    </li>
+                </ul>
+
+                <h4> Wrapper </h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="svmRfe" name="svmRfe" value="True">
+                        <label class="form-check-label" for="svmRfe">SVM-RFE</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="rfRfe" name="rfRfe" value="True">
+                        <label class="form-check-label" for="rfRfe">RF-RFE</label>
+                    </li>
+                </ul>
+
+                <h4> Extraction </h4>
+                <ul class="list-group">
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="pca" name="pca" value="True">
+                        <label class="form-check-label" for="pca">PCA</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="autoencoder" name="autoencoder" value="True">
+                        <label class="form-check-label" for="autoencoder">Autoencoder</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="denoising" name="denoising" value="True">
+                        <label class="form-check-label" for="denoising">Denosining Autoencoder</label>
+                    </li>
+                    <li class="list-group-item border border-0">
+                        <input class="form-check-input me-1" type="checkbox" id="siameseNet" name="siameseNet" value="True">
+                        <label class="form-check-label" for="siameseNet">Siamese Networks</label>
+                    </li>
+                </ul>
+            </div>
+
+            
+            <div class="border border-black p-4 mb-3">
+                <h4 class="form-label" for="logger">Logger</h4>
+                <textarea class="form-control-plaintext" id="logger" rows="5" value="" name="logger" readonly></textarea>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="btn" class="btn btn-primary" style="width: 160px;"> Start </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
