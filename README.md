@@ -1,4 +1,4 @@
-# README for RAGECAN: Automatic Gene Expression Reduction for Cancer Classification
+# RAGECAN: Automatic Gene Expression Reduction for Cancer Classification
 
 ## Introduction
 
@@ -10,6 +10,7 @@ RAGECAN is a Python-based framework designed specifically for improving cancer c
 - **Automatic Parameter Optimization**: Simplifies the tuning of both dimensionality reduction methods and classifiers.
 - **User-Friendly GUI**: Facilitates the use of sophisticated algorithms through a straightforward graphical interface.
 - **Result Tracking and Validation**: Ensures the accuracy and reliability of analysis results through robust validation mechanisms.
+- **Three Optimized Classifiers**: Naive Bayes, Random Forest and SVM are optimized with Optuna for collecting the reduction methods results.
 
 ## Installation
 
