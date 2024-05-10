@@ -46,7 +46,3 @@ class FSOptimizationResult:
     def __str__(self):
         attributes = self.to_dict()
         return '\n'.join(f"{key}: {value}" for key, value in attributes.items())
-        
-# class ExperimentReductionsResults:
-#     def __init__(self):
-# 		 pass

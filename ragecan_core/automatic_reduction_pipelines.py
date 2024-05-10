@@ -117,6 +117,5 @@ class BinarySearchFilterSelection:
 			self.sagecan_logger.save_metrics(metrics=wrapper_dict['test_metrics'], run_name=wrapper_dict['method_name']+'_test', params=wrapper_dict['optimized_parameters'])
 			self.sagecan_logger.add_reduction_stage_result(reductor_method_name=wrapper_dict['method_name'], train_metrics=wrapper_dict['train_metrics'], test_metrics=wrapper_dict['test_metrics'], optimized_parameters=wrapper_dict['optimized_parameters'])
 		
-		logging.info('SUCESSO')
 		return pipeline_result
 

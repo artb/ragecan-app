@@ -14,18 +14,18 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload_file():
 	if 'file' not in request.files:
-		return "Nenhum arquivo selecionado", 400
+		return "No file selected", 400
 	file = request.files['file']
 	label_column = request.form['label_column']
 	if file.filename == '':
-		return "Nenhum arquivo selecionado", 400
+		return "No file found", 400
 	if file and file.filename.endswith('.csv'):
 		filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
 		file.save(filename)
 		df = pd.read_csv(filename)
-		return "Arquivo enviado e lido com sucesso", 200
+		return "CSV has been read and saved!", 200
 	else:
-		return "Formato de arquivo inválido", 400
+		return "Wrong format, use only .csv", 400
 
 @app.route('/start-experiment', methods=['POST'])
 def start_experiment():
@@ -103,6 +103,10 @@ def experiments():
 def about():
 	return render_template('about.html')
 
+@app.route('/help')
+def help():
+	return render_template('help.html')
+
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=False)\
 
