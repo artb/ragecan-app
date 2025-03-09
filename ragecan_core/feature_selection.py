@@ -255,3 +255,46 @@ class MRMRFeatureSelection(BaseFeatureSelection):
 
         ic(f"Test dataset evaluation score: {test_metrics}")
         return (X_train_selected, X_test_selected), (train_metrics, test_metrics)
+
+
+class GiniIndexFeatureSelection(BaseFeatureSelection):
+    def __init__(self, metric, execution_classifier="SVM"):
+        super().__init__(metric, None, execution_classifier=execution_classifier)
+        self.name = "GiniIndexFeatureSelection"
+        logging.info("GiniIndexFeatureSelection Instanced")
+
+    def select_features(self, X, y, n_features):
+        rf = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf.fit(X, y)
+        feature_importances = rf.feature_importances_
+        indices = np.argsort(feature_importances)[::-1][:n_features]
+        self.selected_features = indices
+
+        if isinstance(X, pd.DataFrame):
+            return X.iloc[:, indices].values
+        else:
+            mask = np.zeros(X.shape[1], dtype=bool)
+            mask[indices] = True
+            return X[:, mask]
+
+    def evaluate_on_test(self, X_train, y_train, X_test, y_test):
+        logging.info(f"Evaluating {self.__class__.__name__} on test dataset")
+        rf = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf.fit(X_train, y_train)
+        feature_importances = rf.feature_importances_
+        indices = np.argsort(feature_importances)[::-1][: self.best_features]
+        self.selected_features = indices
+        mask = np.zeros(X_train.shape[1], dtype=bool)
+        mask[indices] = True
+        X_train_selected = X_train[:, mask]
+        X_test_selected = X_test[:, mask]
+        self.best_classifier.fit(X_train_selected, y_train)
+        y_train_pred = self.best_classifier.predict(X_train_selected)
+        y_pred = self.best_classifier.predict(X_test_selected)
+
+        logging.info(f"On evaluation the y has been predicted")
+        train_metrics = return_metric_dict(y_train, y_train_pred)
+        test_metrics = return_metric_dict(y_test, y_pred)
+
+        ic(f"Test dataset evaluation score: {test_metrics}")
+        return (X_train_selected, X_test_selected), (train_metrics, test_metrics)
