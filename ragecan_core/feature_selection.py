@@ -226,12 +226,8 @@ class MRMRFeatureSelection(BaseFeatureSelection):
 
     def evaluate_on_test(self, X_train, y_train, X_test, y_test):
         logging.info(f"Evaluating {self.__class__.__name__} on test dataset")
-
-        # Convert to DataFrames for processing
         X_train_df = pd.DataFrame(X_train)
         X_test_df = pd.DataFrame(X_test)
-
-        # Select features on training data
         y_encoded = self.label_encoder.fit_transform(y_train)
         y_series = pd.Series(y_encoded)
         X_train_df = X_train_df.reset_index(drop=True)
@@ -240,11 +236,9 @@ class MRMRFeatureSelection(BaseFeatureSelection):
         selected_indices = mrmr_classif(X=X_train_df, y=y_series, K=self.best_features)
         self.selected_features = selected_indices
 
-        # Apply selection to train and test
         X_train_selected = X_train_df.iloc[:, selected_indices].values
         X_test_selected = X_test_df.iloc[:, selected_indices].values
 
-        # Fit and predict
         self.best_classifier.fit(X_train_selected, y_train)
         y_train_pred = self.best_classifier.predict(X_train_selected)
         y_pred = self.best_classifier.predict(X_test_selected)
