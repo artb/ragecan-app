@@ -1,20 +1,32 @@
 from sklearn.metrics import confusion_matrix, matthews_corrcoef, f1_score, accuracy_score, classification_report
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def return_metric_dict(y_true, y_pred):
-	metrics_dict = {}
-	acc = accuracy_score(y_true, y_pred)
-	f1_macro = f1_score(y_true, y_pred, average='macro')
-	mcc = matthews_corrcoef(y_true, y_pred)
-	confusion = str(confusion_matrix(y_true, y_pred))
-	clf_report = classification_report(y_true, y_pred, output_dict=True)
-	metrics_dict['accuracy'] = acc
-	metrics_dict['f1_macro'] = f1_macro
-	metrics_dict['mcc'] = mcc
-	metrics_dict['confusion_matrix'] = confusion
-	metrics_dict['clf_report'] = clf_report
-	return metrics_dict
-	
+    metrics_dict = {}
+    try:
+        acc = accuracy_score(y_true, y_pred)
+        f1_macro = f1_score(y_true, y_pred, average='macro')
+        mcc = matthews_corrcoef(y_true, y_pred)
+        confusion = str(confusion_matrix(y_true, y_pred))
+        clf_report = classification_report(y_true, y_pred, output_dict=True)
+        metrics_dict['accuracy'] = acc
+        metrics_dict['f1_macro'] = f1_macro
+        metrics_dict['mcc'] = mcc
+        metrics_dict['confusion_matrix'] = confusion
+        metrics_dict['clf_report'] = clf_report
+    except Exception as e:
+        logging.warning(f"Error calculating metrics: {str(e)}")
+        metrics_dict['accuracy'] = 0
+        metrics_dict['f1_macro'] = 0
+        metrics_dict['mcc'] = 0
+        metrics_dict['confusion_matrix'] = "Error"
+        metrics_dict['clf_report'] = {}
+    
+    return metrics_dict
+    
  
 class FSOptimizationResult:
     def __init__(self, method_name, optimized_parameters, train_metrics, test_metrics, X_train_compressed, X_test_compressed):
